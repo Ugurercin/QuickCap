@@ -8,15 +8,28 @@ import (
 
 type Config struct {
 	Server struct {
-		Port int `mapstructure:"port"`
-	} `mapstructure:"server"`
+		Port int `mapstructure:"port" json:"port"`
+	} `mapstructure:"server" json:"server"`
 
 	Output struct {
-		Directory                 string `mapstructure:"directory"`
-		FPS                       int    `mapstructure:"fps"`
-		StartVideoRecordingHotkey string `mapstructure:"start_video_recording_hotkey"`
-		CaptureScreenShotHotkey   string `mapstructure:"capture_screenshot_hotkey"`
-	} `mapstructure:"output"`
+		Directory                 string `mapstructure:"directory" json:"directory"`
+		FPS                       int    `mapstructure:"fps" json:"fps"`
+		StartVideoRecordingHotkey string `mapstructure:"start_video_recording_hotkey" json:"start_video_recording_hotkey"`
+		CaptureScreenShotHotkey   string `mapstructure:"capture_screenshot_hotkey" json:"capture_screenshot_hotkey"`
+	} `mapstructure:"output" json:"output"`
+}
+
+type ConfigUpdate struct {
+	Server struct {
+		Port *int `json:"port"`
+	} `json:"server"`
+
+	Output struct {
+		Directory                 *string `json:"directory"`
+		FPS                       *int    `json:"fps"`
+		StartVideoRecordingHotkey *string `json:"start_video_recording_hotkey"`
+		CaptureScreenShotHotkey   *string `json:"capture_screenshot_hotkey"`
+	} `json:"output"`
 }
 
 func Load() (*Config, error) {
@@ -27,7 +40,7 @@ func Load() (*Config, error) {
 	v.SetDefault("output.directory", "./captures")
 	v.SetDefault("output.fps", 30)
 	v.SetDefault("output.start_video_recording_hotkey", "2")
-	v.SetDefault("capture_screenshot_hotkey", "1")
+	v.SetDefault("output.capture_screenshot_hotkey", "1")
 
 	// config file settings
 	v.SetConfigName("config")

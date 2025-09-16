@@ -25,9 +25,12 @@ func (s *Server) NewRouter() http.Handler {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	//GET
 	r.Get("/ping", handlePing)
 	r.Get("/status", handleStatus)
 	r.Get("/config", s.getConfig)
+
+	//POST
 	r.Post("/config", s.updateConfig)
 
 	return r
@@ -46,16 +49,28 @@ func (s *Server) getConfig(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(s.cfg)
 }
 
-// POST /config
 func (s *Server) updateConfig(w http.ResponseWriter, r *http.Request) {
-	var newCfg config.Config
-	if err := json.NewDecoder(r.Body).Decode(&newCfg); err != nil {
+	var updates config.ConfigUpdate
+	if err := json.NewDecoder(r.Body).Decode(&updates); err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	// overwrite live config
-	*s.cfg = newCfg
+	if updates.Server.Port != nil {
+		s.cfg.Server.Port = *updates.Server.Port
+	}
+	if updates.Output.Directory != nil {
+		s.cfg.Output.Directory = *updates.Output.Directory
+	}
+	if updates.Output.FPS != nil {
+		s.cfg.Output.FPS = *updates.Output.FPS
+	}
+	if updates.Output.StartVideoRecordingHotkey != nil {
+		s.cfg.Output.StartVideoRecordingHotkey = *updates.Output.StartVideoRecordingHotkey
+	}
+	if updates.Output.CaptureScreenShotHotkey != nil {
+		s.cfg.Output.CaptureScreenShotHotkey = *updates.Output.CaptureScreenShotHotkey
+	}
 
 	// persist to file
 	if err := config.Save(s.cfg); err != nil {
