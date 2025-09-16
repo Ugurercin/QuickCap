@@ -1,0 +1,7 @@
+output:
+    capture_screenshot_hotkey: "1"
+    directory: ./videos
+    fps: 60
+    start_video_recording_hotkey: "5"
+server:
+    port: 8080
