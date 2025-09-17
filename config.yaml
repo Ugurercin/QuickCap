@@ -1,0 +1,9 @@
+output:
+    directory: ./captures
+    fps: 30
+    mode: overlay
+    position: bottom-right
+    webcam_height: 240
+    webcam_width: 320
+server:
+    port: 8080

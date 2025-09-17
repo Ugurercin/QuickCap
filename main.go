@@ -6,6 +6,7 @@ import (
 
 	"example.com/internal/api"
 	"example.com/internal/config"
+	"example.com/internal/recorder"
 )
 
 func main() {
@@ -14,7 +15,8 @@ func main() {
 		panic(err)
 	}
 
-	server := api.NewServer(cfg)
+	rec := recorder.NewRecorder()
+	server := api.NewServer(cfg, rec)
 	router := server.NewRouter()
 
 	addr := fmt.Sprintf(":%d", cfg.Server.Port)
